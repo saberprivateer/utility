@@ -1,0 +1,40 @@
+{
+  "name": "#9807",
+  "tokenId": 9807,
+  "image": "https://gateway.pinata.cloud/ipfs/Qmf4NiNaqGkjjV7dJhf7eNR2NYPiW1wmyrnV496gDSe4qi",
+  "external_url": "https://www.lazylionsnft.com/",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Adamant"
+    },
+    {
+      "trait_type": "Body",
+      "value": "Standard"
+    },
+    {
+      "trait_type": "Bodygear",
+      "value": "Hawaiian Shirt"
+    },
+    {
+      "trait_type": "Earring",
+      "value": "Nothing"
+    },
+    {
+      "trait_type": "Eyes",
+      "value": "Water Goggles"
+    },
+    {
+      "trait_type": "Headgear",
+      "value": "LAZY Hat"
+    },
+    {
+      "trait_type": "Mane",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Mouth",
+      "value": "Pipe"
+    }
+  ]
+}
