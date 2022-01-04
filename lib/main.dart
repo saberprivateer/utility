@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
 import 'package:utility/services.dart';
 import 'package:web3dart/web3dart.dart';
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> getURIll(int nftNumber) async {
     print('get the URI');
     List<dynamic> tokenURI =
-    await callFunction("tokenURI", nftNumber: nftNumber);
+        await callFunction("tokenURI", nftNumber: nftNumber);
     String tokenstr = tokenURI[0];
     String lazylion = await fetchll(tokenstr);
     //print(lazylion);
@@ -96,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late Client httpClient;
   late Web3Client ethClient;
   final String blockchainUrl = "https://cloudflare-eth.com";
-  int selectedAttr=99;
+  int selectedAttr = 99;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -150,8 +151,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ]),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Card(
                 elevation: 3,
@@ -163,8 +164,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',
                     ))),
             SizedBox(
-              //height: 300,
-              //fit: FlexFit.tight,
+                //height: 300,
+                //fit: FlexFit.tight,
 /*
               child: GridView.extent(
                   maxCrossAxisExtent: 130.0,
@@ -182,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           )))
                       .toList()),
 */
-            ),
+                ),
             //Text("The NFT's description"),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: <
                 Widget>[
@@ -190,7 +191,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   height: 100,
                   width: 100,
                   image: NetworkImage('https://www.loot.exchange/lootbag.png')),
-              Expanded(
+              SizedBox(
+                width: 200,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Form(
@@ -215,13 +217,20 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {
                               print('testing');
                               print(nftNumber.text);
-                              int a = int.parse(nftNumber.text);
-                              print(a);
+                              int a;
+                              if (nftNumber.text != '') {
+                                a = int.parse(nftNumber.text);
+                              } else {
+                                a = 9806;
+                              }
                               //print(int.parse(nftNumber.text));
                               getURIll(a);
+
                               //testProvider();
                               //testInterface();
-                              setState(() {});
+                              setState(() {
+                                selectedAttr = 99;
+                              });
                             },
                             child: const Text('Feeling lucky?')),
                       ],
@@ -231,58 +240,39 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ]),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Visibility(
-                    visible: true,
-                    child: (currentJson['image'] == null)
-                        ? SizedBox()
-                        : Image(
-                        width: 150,
-                        //height: 50,
-                        image: NetworkImage(currentJson['image']))
-                  // details(),
+                  visible: true,
+                  child: (currentJson['image'] == null)
+                      ? SizedBox()
+                      :
+                      // Image(
+                      //         width: 150,
+                      //         //height: 50,
+                      //         image: NetworkImage(currentJson['image']))
+                      Expanded(child: battleCard()),
                 ),
                 (currentJson['attributes'] == null)
-                    ? SizedBox(
-                  //height: 50,
-                    width: 100,
-                    child: const DecoratedBox(
-                      decoration: const BoxDecoration(color: Colors.blue),
-                    ))
-                    : Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    //padding: const EdgeInsets.all(5),
-                    padding: EdgeInsets.zero,
-                    itemCount: currentJson['attributes'].length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return TextButton(
-                          onPressed: () {
-                            print(currentJson['attributes'][index]['value']);
-                            selectedAttr = index;
-                            setState(() {
-
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                              backgroundColor: (index==selectedAttr) ? Colors.red : Colors.white,
-                              visualDensity: VisualDensity.compact,
-                              minimumSize: Size.zero,
-                              padding: EdgeInsets.zero,
-                              textStyle: TextStyle(fontSize: 12)),
-                          child: Text(
-                            '${currentJson['attributes'][index]['trait_type']}: ${currentJson['attributes'][index]['value']}',
-                          ));
-                    },
-                  ),
-                ),
+                    ? SizedBox()
+                    : Expanded(child: attributesList()),
+                SizedBox(
+                  width: 20,
+                )
               ],
             ),
+            SizedBox(height: 20),
             Card(child: Text('Select a starting attribute.')),
             ElevatedButton(
                 onPressed: () {
-                  print('battle now!');
+                  print('battle now with selectedAttr: ' +
+                      selectedAttr.toString());
+                  print(currentJson['attributes'].length);
+                  if (selectedAttr > currentJson['attributes'].length) {
+                    print('select an attribute');
+                  } else {
+                    print('go for launch');
+                  }
                   setState(() {});
                 },
                 child: const Text('Begin Battle!')),
@@ -292,13 +282,65 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget details() {
-    print('details');
+  Widget attributesList() {
+    return Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          for (int i = 0; i < currentJson['attributes'].length; i++)
+            InkWell(
+                onTap: () {
+                  selectedAttr = i;
+                  setState(() {});
+                },
+                child: Card(
+                    color: (i == selectedAttr) ? Colors.blue : Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        '${currentJson['attributes'][i]['trait_type']}: ${currentJson['attributes'][i]['value']}',
+                        style: TextStyle(
+                          fontSize: 12,
+                            fontWeight: (i == selectedAttr)
+                                ? FontWeight.bold
+                                : FontWeight.normal),
+                      ),
+                    )))
+        ]);
+  }
+
+  Widget battleCard() {
+    print('battleCard called');
     if (currentJson['image'] != null) {
-      return Image(
-          width: 150,
-          //height: 50,
-          image: NetworkImage(currentJson['image']));
+      return Column(
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Image(
+                width: 150,
+                //height: 50,
+                image: NetworkImage(currentJson['image'])),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Image.asset('assets/images/plus.png', width: 20),
+                  SizedBox(width: 10),
+                  Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Image.asset('assets/images/shield.png', width: 20),
+                  SizedBox(width: 10),
+                  Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Image.asset('assets/images/magic.png', width: 20),
+                  // Positioned(
+                  // bottom: 0, left: 0, width: 20, child: Image.asset('assets/images/plus.png')),
+                  // Positioned(
+                  // bottom: 0, left: 50, width: 20, child: Image.asset('assets/images/shield.png')),
+                  // Positioned(
+                  // bottom: 0, left: 100, width: 20, child: Image.asset('assets/images/magic.png')),
+                ])
+            // Positioned(
+            //     top: 0, left: 100, width: 20, child: Image.asset('assets/images/plus.png')),
+          ]);
     } else {
       return SizedBox();
     }
