@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:utility/services.dart';
 import 'package:web3dart/web3dart.dart';
 import 'dart:math' as Math;
 
@@ -76,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //print(lazylion);
     Map<String, dynamic> lljson = jsonDecode(lazylion);
     setState(() {
+      isLoading = false;
       currentJson = lljson;
     });
   }
@@ -98,6 +100,16 @@ class _MyHomePageState extends State<MyHomePage> {
   late Web3Client ethClient;
   final String blockchainUrl = "https://cloudflare-eth.com";
   int selectedAttr = 99;
+  int myHealth = 10;
+  int myShields = 10;
+  int myAttack = 10;
+  var myStats = [10,10,10];
+  var theirStats = [12,12,5];
+  late var myCurrentStats = List.from(myStats);
+  late var theirCurrentStats = List.from(theirStats);
+  int theirHealth = 12;
+  int theirShields = 12;
+  int theirAttack = 5;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -115,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    //double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -190,8 +202,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Flexible(
                   child: Visibility(
                     visible: championSelect,
-                    child: (currentJson['image'] == null)
-                        ? SizedBox()
+                    child: isLoading//(currentJson['image'] == null)
+                        ? loading()
                         : battleCard(0),
                   ),
                 ),
@@ -208,7 +220,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       selectedAttr.toString());
                   print(currentJson['attributes'].length);
                   if (battling) {
-                    battling = !battling;
+                    fightSim();
+                    //battling = !battling;
                   } else {
                     if (selectedAttr > currentJson['attributes'].length) {
                       print('select an attribute');
@@ -224,6 +237,35 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void fightSim() {
+    print('Battle beginning!');
+    print('My starting stats:');
+    print(myCurrentStats);
+    print('Opponent starting stats:');
+    print(theirCurrentStats);
+    bool turn = true;
+    int turns = 1;
+    while (myCurrentStats[0] > 0 && theirCurrentStats[0] > 0) {
+      print('This is turn: '+turns.toString());
+      if (turn) {
+       theirCurrentStats[0] = theirCurrentStats[0] - myCurrentStats[2];
+      } else {
+        myCurrentStats[0] = myCurrentStats[0] - theirCurrentStats[2];
+      }
+      turn = !turn;
+      setState(() {});
+      turns +=1;
+    }
+      battling = !battling;
+      myCurrentStats = List.from(myStats);
+      theirCurrentStats = List.from(theirStats);
+    setState(() {
+      print('setting some state');
+      print(theirCurrentStats);
+      print(theirStats);
+    });
   }
 
   Widget attributesList() {
@@ -258,6 +300,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget battleCard(int rotate) {
     print('battleCard called');
+    String health;
+    String shields;
+    String attack;
+    if (rotate == 0) {
+      health = myCurrentStats[0].toString();
+      shields = myCurrentStats[1].toString();
+      attack = myCurrentStats[2].toString();
+    } else {
+    health = theirCurrentStats[0].toString();
+    shields = theirCurrentStats[1].toString();
+    attack = theirCurrentStats[2].toString();
+    }
     if (currentJson['image'] != null) {
       return Container(
         width: 150, //MediaQuery.of(context).size.width*.3,
@@ -278,13 +332,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(health, style: TextStyle(fontWeight: FontWeight.bold)),
                       Image.asset('assets/images/plus.png', width: 20),
                       SizedBox(width: 10),
-                      Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(shields.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
                       Image.asset('assets/images/shield.png', width: 20),
                       SizedBox(width: 10),
-                      Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(attack, style: TextStyle(fontWeight: FontWeight.bold)),
                       Image.asset('assets/images/magic.png', width: 20),
                       // Positioned(
                       // bottom: 0, left: 0, width: 20, child: Image.asset('assets/images/plus.png')),
@@ -316,18 +370,12 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (item) {
       case 0:
         return SizedBox();
-        print('RHS -> Empty');
-        break;
       case 1:
         return attributesList();
-        print('select power');
-        break;
       case 2:
         return battleCard(1);
-        break;
       default:
         return SizedBox();
-        print('RHS fail');
     }
   }
 
@@ -373,14 +421,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           a = 9806;
                         }
                         //print(int.parse(nftNumber.text));
-                        getURIll(a);
-
                         //testProvider();
                         //testInterface();
                         setState(() {
+                          isLoading = true;
                           championSelect = true;
                           selectedAttr = 99;
                         });
+                        getURIll(a);
                       },
                       child: const Text('Feeling lucky?')),
                 ],
