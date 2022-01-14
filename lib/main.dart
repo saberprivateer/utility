@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -103,13 +104,14 @@ class _MyHomePageState extends State<MyHomePage> {
   int myHealth = 10;
   int myShields = 10;
   int myAttack = 10;
-  var myStats = [10,10,10];
-  var theirStats = [12,12,5];
+  var myStats = [10, 10, 10];
+  var theirStats = [12, 12, 5];
   late var myCurrentStats = List.from(myStats);
   late var theirCurrentStats = List.from(theirStats);
   int theirHealth = 12;
   int theirShields = 12;
   int theirAttack = 5;
+  bool _explode = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -202,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Flexible(
                   child: Visibility(
                     visible: championSelect,
-                    child: isLoading//(currentJson['image'] == null)
+                    child: isLoading //(currentJson['image'] == null)
                         ? loading()
                         : battleCard(0),
                   ),
@@ -211,9 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             SizedBox(height: 20),
-            battling
-                ? SizedBox()
-                : Text('Select a starting attribute.'),
+            battling ? SizedBox() : Text('Select a starting attribute.'),
             ElevatedButton(
                 onPressed: () {
                   print('battle now with selectedAttr: ' +
@@ -228,9 +228,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     } else {
                       print('go for launch');
                       battling = !battling;
+                      _explode = true;
+                      Timer(Duration(seconds: 3), () {
+                        setState(() {
+                          _explode = false;
+                        });
+                        print("Yeah, this line is printed after 3 seconds");
+                      });
                     }
                   }
-                  setState(() {});
+                  setState(() {
+                  });
                 },
                 child: battling ? Text('Begin Battle!') : Text('Ready to go!')),
           ],
@@ -248,19 +256,19 @@ class _MyHomePageState extends State<MyHomePage> {
     bool turn = true;
     int turns = 1;
     while (myCurrentStats[0] > 0 && theirCurrentStats[0] > 0) {
-      print('This is turn: '+turns.toString());
+      print('This is turn: ' + turns.toString());
       if (turn) {
-       theirCurrentStats[0] = theirCurrentStats[0] - myCurrentStats[2];
+        theirCurrentStats[0] = theirCurrentStats[0] - myCurrentStats[2];
       } else {
         myCurrentStats[0] = myCurrentStats[0] - theirCurrentStats[2];
       }
       turn = !turn;
       setState(() {});
-      turns +=1;
+      turns += 1;
     }
-      battling = !battling;
-      myCurrentStats = List.from(myStats);
-      theirCurrentStats = List.from(theirStats);
+    battling = !battling;
+    myCurrentStats = List.from(myStats);
+    theirCurrentStats = List.from(theirStats);
     setState(() {
       print('setting some state');
       print(theirCurrentStats);
@@ -308,9 +316,9 @@ class _MyHomePageState extends State<MyHomePage> {
       shields = myCurrentStats[1].toString();
       attack = myCurrentStats[2].toString();
     } else {
-    health = theirCurrentStats[0].toString();
-    shields = theirCurrentStats[1].toString();
-    attack = theirCurrentStats[2].toString();
+      health = theirCurrentStats[0].toString();
+      shields = theirCurrentStats[1].toString();
+      attack = theirCurrentStats[2].toString();
     }
     if (currentJson['image'] != null) {
       return Container(
@@ -323,22 +331,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(Math.pi * rotate),
-                  child: Image(
-                      // width: 150,
-                      //height: 50,
-                      image: NetworkImage(currentJson['image'])),
+                  child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                    Image(
+                        // width: 150,
+                        //height: 50,
+                        image: NetworkImage(currentJson['image'])),
+                        (_explode) ? Image(
+                      height: 100,
+                        image: AssetImage('assets/images/explode.gif')) : SizedBox(),
+                  ]),
                 ),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(health, style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(health,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       Image.asset('assets/images/plus.png', width: 20),
                       SizedBox(width: 10),
-                      Text(shields.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(shields.toString(),
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       Image.asset('assets/images/shield.png', width: 20),
                       SizedBox(width: 10),
-                      Text(attack, style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(attack,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       Image.asset('assets/images/magic.png', width: 20),
                       // Positioned(
                       // bottom: 0, left: 0, width: 20, child: Image.asset('assets/images/plus.png')),
