@@ -1,6 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 
+Widget loading() {
+  return Center(
+    child: CircularProgressIndicator(),
+  );
+}
 // Future<void> getURIcr() async {
 //   print('get the URI');
 //   List<dynamic> tokenURI = await callFunction("tokenURI");

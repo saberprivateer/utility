@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
-import 'package:utility/services.dart';
 import 'package:web3dart/web3dart.dart';
+import 'dart:math' as Math;
 
 void main() {
   runApp(MyApp());
@@ -33,6 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final nftNumber = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -110,8 +110,13 @@ class _MyHomePageState extends State<MyHomePage> {
     //"Chain Runners"
   ];
 
+  bool battling = false;
+  bool championSelect = false;
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text('Survive. Utility. Score.'), actions: [
@@ -154,15 +159,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Card(
-                elevation: 3,
-                //borderOnForeground: true,
-                margin: EdgeInsets.all(10),
-                child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text(
-                      'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',
-                    ))),
+            explainer(),
+            nftSelect(),
             SizedBox(
                 //height: 300,
                 //fit: FlexFit.tight,
@@ -185,97 +183,43 @@ class _MyHomePageState extends State<MyHomePage> {
 */
                 ),
             //Text("The NFT's description"),
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                Widget>[
-              Image(
-                  height: 100,
-                  width: 100,
-                  image: NetworkImage('https://www.loot.exchange/lootbag.png')),
-              SizedBox(
-                width: 200,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          textInputAction: TextInputAction.go,
-                          decoration: const InputDecoration(
-                            hintText: 'Input An Address / TokenID',
-                          ),
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            return null;
-                          },
-                          controller: nftNumber,
-                          keyboardType: TextInputType.number,
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              print('testing');
-                              print(nftNumber.text);
-                              int a;
-                              if (nftNumber.text != '') {
-                                a = int.parse(nftNumber.text);
-                              } else {
-                                a = 9806;
-                              }
-                              //print(int.parse(nftNumber.text));
-                              getURIll(a);
-
-                              //testProvider();
-                              //testInterface();
-                              setState(() {
-                                selectedAttr = 99;
-                              });
-                            },
-                            child: const Text('Feeling lucky?')),
-                      ],
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Visibility(
+                    visible: championSelect,
+                    child: (currentJson['image'] == null)
+                        ? SizedBox()
+                        : battleCard(0),
                   ),
                 ),
-              )
-            ]),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Visibility(
-                  visible: true,
-                  child: (currentJson['image'] == null)
-                      ? SizedBox()
-                      :
-                      // Image(
-                      //         width: 150,
-                      //         //height: 50,
-                      //         image: NetworkImage(currentJson['image']))
-                      Expanded(child: battleCard()),
-                ),
-                (currentJson['attributes'] == null)
-                    ? SizedBox()
-                    : Expanded(child: attributesList()),
-                SizedBox(
-                  width: 20,
-                )
+                Flexible(child: rightHandSide()),
               ],
             ),
             SizedBox(height: 20),
-            Card(child: Text('Select a starting attribute.')),
+            battling
+                ? SizedBox()
+                : Text('Select a starting attribute.'),
             ElevatedButton(
                 onPressed: () {
                   print('battle now with selectedAttr: ' +
                       selectedAttr.toString());
                   print(currentJson['attributes'].length);
-                  if (selectedAttr > currentJson['attributes'].length) {
-                    print('select an attribute');
+                  if (battling) {
+                    battling = !battling;
                   } else {
-                    print('go for launch');
+                    if (selectedAttr > currentJson['attributes'].length) {
+                      print('select an attribute');
+                    } else {
+                      print('go for launch');
+                      battling = !battling;
+                    }
                   }
                   setState(() {});
                 },
-                child: const Text('Begin Battle!')),
+                child: battling ? Text('Begin Battle!') : Text('Ready to go!')),
           ],
         ),
       ),
@@ -283,66 +227,180 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget attributesList() {
-    return Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          for (int i = 0; i < currentJson['attributes'].length; i++)
-            InkWell(
-                onTap: () {
-                  selectedAttr = i;
-                  setState(() {});
-                },
-                child: Card(
-                    color: (i == selectedAttr) ? Colors.blue : Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        '${currentJson['attributes'][i]['trait_type']}: ${currentJson['attributes'][i]['value']}',
-                        style: TextStyle(
-                          fontSize: 12,
-                            fontWeight: (i == selectedAttr)
-                                ? FontWeight.bold
-                                : FontWeight.normal),
-                      ),
-                    )))
-        ]);
+    return SizedBox(
+      width: 150,
+      child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            for (int i = 0; i < currentJson['attributes'].length; i++)
+              InkWell(
+                  onTap: () {
+                    selectedAttr = i;
+                    setState(() {});
+                  },
+                  child: Card(
+                      color: (i == selectedAttr) ? Colors.blue : Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          '${currentJson['attributes'][i]['trait_type']}: ${currentJson['attributes'][i]['value']}',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: (i == selectedAttr)
+                                  ? FontWeight.bold
+                                  : FontWeight.normal),
+                        ),
+                      )))
+          ]),
+    );
   }
 
-  Widget battleCard() {
+  Widget battleCard(int rotate) {
     print('battleCard called');
     if (currentJson['image'] != null) {
-      return Column(
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Image(
-                width: 150,
-                //height: 50,
-                image: NetworkImage(currentJson['image'])),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Image.asset('assets/images/plus.png', width: 20),
-                  SizedBox(width: 10),
-                  Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Image.asset('assets/images/shield.png', width: 20),
-                  SizedBox(width: 10),
-                  Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Image.asset('assets/images/magic.png', width: 20),
-                  // Positioned(
-                  // bottom: 0, left: 0, width: 20, child: Image.asset('assets/images/plus.png')),
-                  // Positioned(
-                  // bottom: 0, left: 50, width: 20, child: Image.asset('assets/images/shield.png')),
-                  // Positioned(
-                  // bottom: 0, left: 100, width: 20, child: Image.asset('assets/images/magic.png')),
-                ])
-            // Positioned(
-            //     top: 0, left: 100, width: 20, child: Image.asset('assets/images/plus.png')),
-          ]);
+      return Container(
+        width: 150, //MediaQuery.of(context).size.width*.3,
+        child: Card(
+          elevation: 6,
+          child: Column(mainAxisSize: MainAxisSize.min,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.rotationY(Math.pi * rotate),
+                  child: Image(
+                      // width: 150,
+                      //height: 50,
+                      image: NetworkImage(currentJson['image'])),
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Image.asset('assets/images/plus.png', width: 20),
+                      SizedBox(width: 10),
+                      Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Image.asset('assets/images/shield.png', width: 20),
+                      SizedBox(width: 10),
+                      Text('10', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Image.asset('assets/images/magic.png', width: 20),
+                      // Positioned(
+                      // bottom: 0, left: 0, width: 20, child: Image.asset('assets/images/plus.png')),
+                      // Positioned(
+                      // bottom: 0, left: 50, width: 20, child: Image.asset('assets/images/shield.png')),
+                      // Positioned(
+                      // bottom: 0, left: 100, width: 20, child: Image.asset('assets/images/magic.png')),
+                    ])
+                // Positioned(
+                //     top: 0, left: 100, width: 20, child: Image.asset('assets/images/plus.png')),
+              ]),
+        ),
+      );
     } else {
       return SizedBox();
     }
+  }
+
+  Widget rightHandSide() {
+    // print('rightHandSide called');
+    late var item;
+    if (currentJson['attributes'] == null) {
+      item = 0;
+    } else if (battling == false) {
+      item = 1;
+    } else {
+      item = 2;
+    }
+    switch (item) {
+      case 0:
+        return SizedBox();
+        print('RHS -> Empty');
+        break;
+      case 1:
+        return attributesList();
+        print('select power');
+        break;
+      case 2:
+        return battleCard(1);
+        break;
+      default:
+        return SizedBox();
+        print('RHS fail');
+    }
+  }
+
+  Widget nftSelect() {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child:
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+        Image(
+            height: 100,
+            width: 100,
+            image: NetworkImage('https://www.loot.exchange/lootbag.png')),
+        SizedBox(
+          width: 200,
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    textInputAction: TextInputAction.go,
+                    decoration: const InputDecoration(
+                      hintText: 'Input An Address / TokenID',
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    controller: nftNumber,
+                    keyboardType: TextInputType.number,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        print('testing');
+                        print(nftNumber.text);
+                        int a;
+                        if (nftNumber.text != '') {
+                          a = int.parse(nftNumber.text);
+                        } else {
+                          a = 9806;
+                        }
+                        //print(int.parse(nftNumber.text));
+                        getURIll(a);
+
+                        //testProvider();
+                        //testInterface();
+                        setState(() {
+                          championSelect = true;
+                          selectedAttr = 99;
+                        });
+                      },
+                      child: const Text('Feeling lucky?')),
+                ],
+              ),
+            ),
+          ),
+        )
+      ]),
+    );
+  }
+
+  Widget explainer() {
+    return Card(
+        elevation: 3,
+        //borderOnForeground: true,
+        margin: EdgeInsets.all(10),
+        child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Text(
+              'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',
+            )));
   }
 }
