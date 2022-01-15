@@ -112,6 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int theirShields = 12;
   int theirAttack = 5;
   bool _explode = false;
+  bool turn = true;
+  int turns = 1;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -213,32 +215,33 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             SizedBox(height: 20),
-            battling ? SizedBox() : Text('Select a starting attribute.'),
+            battling ? Text('TURN '+turns.toString()) : Text('Select a starting attribute.'),
             ElevatedButton(
                 onPressed: () {
                   print('battle now with selectedAttr: ' +
                       selectedAttr.toString());
                   print(currentJson['attributes'].length);
                   if (battling) {
-                    fightSim();
-                    //battling = !battling;
+                    if (myCurrentStats[0] > 0 && theirCurrentStats[0] > 0) {
+                      fightRound();
+                    } else {
+                      setState(() {
+                        myCurrentStats = List.from(myStats);
+                        battling = !battling;
+                      });
+                    }
                   } else {
                     if (selectedAttr > currentJson['attributes'].length) {
                       print('select an attribute');
                     } else {
                       print('go for launch');
                       battling = !battling;
-                      _explode = true;
-                      Timer(Duration(seconds: 3), () {
-                        setState(() {
-                          _explode = false;
-                        });
-                        print("Yeah, this line is printed after 3 seconds");
+                      setState(() {
+                        theirCurrentStats = List.from(theirStats);
+                        turns = 1;
                       });
                     }
                   }
-                  setState(() {
-                  });
                 },
                 child: battling ? Text('Begin Battle!') : Text('Ready to go!')),
           ],
@@ -247,32 +250,36 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void fightSim() {
-    print('Battle beginning!');
+  void fightRound() {
+    print('Battle turn: '+turns.toString());
     print('My starting stats:');
     print(myCurrentStats);
     print('Opponent starting stats:');
     print(theirCurrentStats);
-    bool turn = true;
-    int turns = 1;
-    while (myCurrentStats[0] > 0 && theirCurrentStats[0] > 0) {
-      print('This is turn: ' + turns.toString());
-      if (turn) {
-        theirCurrentStats[0] = theirCurrentStats[0] - myCurrentStats[2];
-      } else {
-        myCurrentStats[0] = myCurrentStats[0] - theirCurrentStats[2];
-      }
-      turn = !turn;
-      setState(() {});
-      turns += 1;
+    // bool turn = true;
+    // while (myCurrentStats[0] > 0 && theirCurrentStats[0] > 0) {
+    print('This is turn: ' + turns.toString());
+    if (turn) {
+      theirCurrentStats[0] = theirCurrentStats[0] - myCurrentStats[2];
+    } else {
+      myCurrentStats[0] = myCurrentStats[0] - theirCurrentStats[2];
     }
-    battling = !battling;
-    myCurrentStats = List.from(myStats);
-    theirCurrentStats = List.from(theirStats);
+    setState(() {});
+    turns += 1;
+    // }
+    setState(() {
+      _explode = true;
+    });
+    Timer(Duration(seconds: 3), () {
+      setState(() {
+        _explode = false;
+      });
+    });
     setState(() {
       print('setting some state');
       print(theirCurrentStats);
       print(theirStats);
+      turn = !turn;
     });
   }
 
@@ -331,16 +338,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(Math.pi * rotate),
-                  child: Stack(
-                      alignment: Alignment.center,
-                      children: [
+                  child: Stack(alignment: Alignment.center, children: [
                     Image(
                         // width: 150,
                         //height: 50,
                         image: NetworkImage(currentJson['image'])),
-                        (_explode) ? Image(
-                      height: 100,
-                        image: AssetImage('assets/images/explode.gif')) : SizedBox(),
+                    (_explode && (turn == rotate.isEven))
+                        ? Image(
+                            height: 100,
+                            image: AssetImage('assets/images/explode.gif'))
+                        : SizedBox(),
                   ]),
                 ),
                 Row(
