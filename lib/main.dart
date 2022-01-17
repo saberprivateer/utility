@@ -341,17 +341,35 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void whatCategory(int i) {
     var boost;
-    for (int j = 0; j < llTags.length; j++){
-      if(llTags[j]['Attribute'] == currentJson['attributes'][i]['trait_type']) {
-        //print(llTags[j]['Attribute']+' = '+currentJson['attributes'][i]['trait_type']);
-        if(llTags[j]['Trait']==currentJson['attributes'][i]['value']) {
-          //print(llTags[j]['Category']);
-          boost = powerMap.singleWhere((element) => element['Category'] == llTags[j]['Category'], orElse: () => {
-            "Attribute": 'Empty'
-          });
-          print(boost['Attribute']);
+    var checker;
+    checker = llTags
+        .where((element) => element['Attribute']==currentJson['attributes'][i]['trait_type'])
+        .singleWhere((element) => element['Trait']==currentJson['attributes'][i]['value'],
+        orElse: () => {
+          "Category": "Missing"
         }
-      }
+    );
+    print('checker');
+    print(checker);
+    print(checker['Category']);
+    boost = powerMap.singleWhere((element) => element['Category'] == checker['Category'], orElse: () => {
+      "Attribute": 'Empty'
+    });
+    print('BOOST');
+    print(boost['Attribute']);
+    if (boost['Attribute'] == 'Shields') {
+      myCurrentStats[1]+=3;
+    }
+    if (boost['Attribute'] == 'Health') {
+      myCurrentStats[0]+=3;
+    }
+    if (boost['Attribute'] == 'Attack') {
+      myCurrentStats[2]+=3;
+    }
+    if (boost['Attribute'] == 'Empty') {
+      myCurrentStats[0]+=1;
+      myCurrentStats[1]+=1;
+      myCurrentStats[2]+=1;
     }
   }
 
