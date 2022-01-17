@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final nftNumber = TextEditingController();
-  bool isLoading = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //print(lazylion);
     Map<String, dynamic> lljson = jsonDecode(lazylion);
     setState(() {
-      isLoading = false;
+      //isLoading = false;
       currentJson = lljson;
     });
   }
@@ -100,7 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late Client httpClient;
   late Web3Client ethClient;
   final String blockchainUrl = "https://cloudflare-eth.com";
-  int selectedAttr = 99;
+  var selectedAttr = [];
+  int round = 1;
   int myHealth = 10;
   int myShields = 10;
   int myAttack = 10;
@@ -114,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _explode = false;
   bool turn = true;
   int turns = 1;
+  bool fightOver = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -199,59 +201,51 @@ class _MyHomePageState extends State<MyHomePage> {
 */
                 ),
             //Text("The NFT's description"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  child: Visibility(
-                    visible: championSelect,
-                    child: isLoading //(currentJson['image'] == null)
-                        ? loading()
-                        : battleCard(0),
+            if (championSelect)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: battleCard(0),
                   ),
-                ),
-                Flexible(child: rightHandSide()),
-              ],
-            ),
+                  Flexible(child: rightHandSide()),
+                ],
+              )
+            else
+              SizedBox(),
             SizedBox(height: 20),
-            battling ? Text('TURN '+turns.toString()) : Text('Select a starting attribute.'),
-            ElevatedButton(
-                onPressed: () {
-                  print('battle now with selectedAttr: ' +
-                      selectedAttr.toString());
-                  print(currentJson['attributes'].length);
-                  if (battling) {
-                    if (myCurrentStats[0] > 0 && theirCurrentStats[0] > 0) {
-                      fightRound();
-                    } else {
-                      setState(() {
-                        myCurrentStats = List.from(myStats);
-                        battling = !battling;
-                      });
-                    }
-                  } else {
-                    if (selectedAttr > currentJson['attributes'].length) {
-                      print('select an attribute');
-                    } else {
-                      print('go for launch');
-                      battling = !battling;
-                      setState(() {
-                        theirCurrentStats = List.from(theirStats);
-                        turns = 1;
-                      });
-                    }
-                  }
-                },
-                child: battling ? Text('Begin Battle!') : Text('Ready to go!')),
+            battling
+                ? Text('TURN ' + turns.toString())
+                : Text('Select a starting attribute.'),
+            Visibility(
+              visible: (championSelect && selectedAttr.length > 0 && !battling),
+              child: startFight(),
+            ),
+            Visibility(visible: battling && !fightOver, child: continueFight()),
+            Visibility(visible: battling && fightOver, child: finishFight())
           ],
         ),
       ),
     );
   }
 
+  String getButtonState() {
+    return 'placeholder';
+    // switch (item) {
+    //   case 0:
+    //     return SizedBox();
+    //   case 1:
+    //     return attributesList();
+    //   case 2:
+    //     return battleCard(1);
+    //   default:
+    //     return SizedBox();
+    // }
+  }
+
   void fightRound() {
-    print('Battle turn: '+turns.toString());
+    print('Battle turn: ' + turns.toString());
     print('My starting stats:');
     print(myCurrentStats);
     print('Opponent starting stats:');
@@ -275,12 +269,54 @@ class _MyHomePageState extends State<MyHomePage> {
         _explode = false;
       });
     });
+    if (myCurrentStats[0] < 1 || theirCurrentStats[0] < 1) {
+      fightOver = true;
+    }
     setState(() {
       print('setting some state');
       print(theirCurrentStats);
       print(theirStats);
       turn = !turn;
     });
+  }
+
+  Widget continueFight() {
+    return ElevatedButton(
+        onPressed: () {
+          fightRound();
+        },
+        child: Text('Fight!'));
+  }
+
+  Widget finishFight() {
+    return ElevatedButton(
+        onPressed: () {
+          if (myCurrentStats[0] < 0) {
+            championSelect = false;
+          } else {
+            round += 1;
+          }
+          setState(() {
+            myCurrentStats = List.from(myStats);
+            battling = !battling;
+            print('rounds = '+round.toString());
+          });
+        },
+        child: Text(myCurrentStats[0] > 0 ? 'You Win!' : 'You Lose :('));
+  }
+
+  Widget startFight() {
+    return ElevatedButton(
+        onPressed: () {
+          print('battle now with selectedAttr: ' + selectedAttr.toString());
+          setState(() {
+            theirCurrentStats = List.from(theirStats);
+            turns = 1;
+            fightOver = false;
+            battling = true;
+          });
+        },
+        child: Text('Start Fight!'));
   }
 
   Widget attributesList() {
@@ -293,18 +329,24 @@ class _MyHomePageState extends State<MyHomePage> {
             for (int i = 0; i < currentJson['attributes'].length; i++)
               InkWell(
                   onTap: () {
-                    selectedAttr = i;
+                    if (selectedAttr.length < round) {
+                      selectedAttr.add(i);
+                    } else {
+                      selectedAttr[round - 1] = i;
+                    }
                     setState(() {});
                   },
                   child: Card(
-                      color: (i == selectedAttr) ? Colors.blue : Colors.white,
+                      color: selectedAttr.any((e) => e == i)
+                          ? Colors.blue
+                          : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Text(
                           '${currentJson['attributes'][i]['trait_type']}: ${currentJson['attributes'][i]['value']}',
                           style: TextStyle(
                               fontSize: 12,
-                              fontWeight: (i == selectedAttr)
+                              fontWeight: selectedAttr.any((e) => e == i)
                                   ? FontWeight.bold
                                   : FontWeight.normal),
                         ),
@@ -327,59 +369,54 @@ class _MyHomePageState extends State<MyHomePage> {
       shields = theirCurrentStats[1].toString();
       attack = theirCurrentStats[2].toString();
     }
-    if (currentJson['image'] != null) {
-      return Container(
-        width: 150, //MediaQuery.of(context).size.width*.3,
-        child: Card(
-          elevation: 6,
-          child: Column(mainAxisSize: MainAxisSize.min,
-              // crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(Math.pi * rotate),
-                  child: Stack(alignment: Alignment.center, children: [
-                    Image(
-                        // width: 150,
-                        //height: 50,
-                        image: NetworkImage(currentJson['image'])),
-                    (_explode && (turn == rotate.isEven))
-                        ? Image(
-                            height: 100,
-                            image: AssetImage('assets/images/explode.gif'))
-                        : SizedBox(),
-                  ]),
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(health,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Image.asset('assets/images/plus.png', width: 20),
-                      SizedBox(width: 10),
-                      Text(shields.toString(),
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Image.asset('assets/images/shield.png', width: 20),
-                      SizedBox(width: 10),
-                      Text(attack,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Image.asset('assets/images/magic.png', width: 20),
-                      // Positioned(
-                      // bottom: 0, left: 0, width: 20, child: Image.asset('assets/images/plus.png')),
-                      // Positioned(
-                      // bottom: 0, left: 50, width: 20, child: Image.asset('assets/images/shield.png')),
-                      // Positioned(
-                      // bottom: 0, left: 100, width: 20, child: Image.asset('assets/images/magic.png')),
-                    ])
-                // Positioned(
-                //     top: 0, left: 100, width: 20, child: Image.asset('assets/images/plus.png')),
-              ]),
-        ),
-      );
-    } else {
-      return SizedBox();
-    }
+    return Container(
+      width: 150, //MediaQuery.of(context).size.width*.3,
+      child: Card(
+        elevation: 6,
+        child: Column(mainAxisSize: MainAxisSize.min,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.rotationY(Math.pi * rotate),
+                child: Stack(alignment: Alignment.center, children: [
+                  (currentJson['image'] == null)
+                      ? SizedBox()
+                      : Image(
+                          image: NetworkImage(currentJson['image']),
+                        ),
+                  (_explode && (turn == rotate.isEven))
+                      ? Image(
+                          height: 100,
+                          image: AssetImage('assets/images/explode.gif'))
+                      : SizedBox(),
+                ]),
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(health, style: TextStyle(fontWeight: FontWeight.bold)),
+                    Image.asset('assets/images/plus.png', width: 20),
+                    SizedBox(width: 10),
+                    Text(shields.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Image.asset('assets/images/shield.png', width: 20),
+                    SizedBox(width: 10),
+                    Text(attack, style: TextStyle(fontWeight: FontWeight.bold)),
+                    Image.asset('assets/images/magic.png', width: 20),
+                    // Positioned(
+                    // bottom: 0, left: 0, width: 20, child: Image.asset('assets/images/plus.png')),
+                    // Positioned(
+                    // bottom: 0, left: 50, width: 20, child: Image.asset('assets/images/shield.png')),
+                    // Positioned(
+                    // bottom: 0, left: 100, width: 20, child: Image.asset('assets/images/magic.png')),
+                  ])
+              // Positioned(
+              //     top: 0, left: 100, width: 20, child: Image.asset('assets/images/plus.png')),
+            ]),
+      ),
+    );
   }
 
   Widget rightHandSide() {
@@ -437,8 +474,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        print('testing');
-                        print(nftNumber.text);
                         int a;
                         if (nftNumber.text != '') {
                           a = int.parse(nftNumber.text);
@@ -448,10 +483,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         //print(int.parse(nftNumber.text));
                         //testProvider();
                         //testInterface();
+
                         setState(() {
                           isLoading = true;
                           championSelect = true;
-                          selectedAttr = 99;
+                          selectedAttr.clear();
+                          round = 1;
+                          battling = false;
+                          fightOver = false;
                         });
                         getURIll(a);
                       },
