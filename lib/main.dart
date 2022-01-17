@@ -35,12 +35,27 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final nftNumber = TextEditingController();
   bool isLoading = true;
+  List llTags = [];
 
   @override
   void initState() {
     httpClient = Client();
     ethClient = Web3Client(blockchainUrl, httpClient);
+    getLazyLionTags();
     super.initState();
+  }
+
+  Future<void> getLazyLionTags() async {
+    late Client httpClient;
+    httpClient = Client();
+    String URL = "https://script.google.com/macros/s/AKfycbx0Vt3s67qnOaQJHdKl0EJ3-g2f_-1FWh-HuUyN3HkjnbetAhFh4Zt1q7vIKMoSTjT0Rg/exec";
+    return await httpClient.get(Uri.parse(URL),headers: {'Content-Type': 'application/json'}).then((response) {
+      //print(response.body);
+      List tagString = jsonDecode(response.body);
+      print('found tagString?');
+      print(tagString[0]['Attribute']);
+      llTags = tagString;
+    });
   }
 
   Future<List<dynamic>> callFunction(String name,
@@ -141,7 +156,11 @@ class _MyHomePageState extends State<MyHomePage> {
         IconButton(
             icon: const Icon(Icons.restart_alt),
             tooltip: 'Restart',
-            onPressed: () {}),
+            onPressed: () {
+              print('lltags???');
+              print(llTags);
+              getLazyLionTags();
+            }),
         IconButton(
             icon: const Icon(Icons.description),
             tooltip: 'White Paper',
@@ -230,20 +249,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  String getButtonState() {
-    return 'placeholder';
-    // switch (item) {
-    //   case 0:
-    //     return SizedBox();
-    //   case 1:
-    //     return attributesList();
-    //   case 2:
-    //     return battleCard(1);
-    //   default:
-    //     return SizedBox();
-    // }
-  }
-
   void fightRound() {
     print('Battle turn: ' + turns.toString());
     print('My starting stats:');
@@ -319,6 +324,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Text('Start Fight!'));
   }
 
+  void whatCategory(int i) {
+    for (int j = 0; j < llTags.length; j++){
+      if(llTags[j]['Attribute'] == currentJson['attributes'][i]['trait_type']) {
+        //print(llTags[j]['Attribute']+' = '+currentJson['attributes'][i]['trait_type']);
+        if(llTags[j]['Trait']==currentJson['attributes'][i]['value']) {
+          print(llTags[j]['Category']);
+        }
+      }
+    }
+  }
+
   Widget attributesList() {
     return SizedBox(
       width: 150,
@@ -329,6 +345,7 @@ class _MyHomePageState extends State<MyHomePage> {
             for (int i = 0; i < currentJson['attributes'].length; i++)
               InkWell(
                   onTap: () {
+                    whatCategory(i);
                     if (selectedAttr.length < round) {
                       selectedAttr.add(i);
                     } else {
@@ -356,7 +373,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget battleCard(int rotate) {
-    print('battleCard called');
     String health;
     String shields;
     String attack;
