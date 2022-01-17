@@ -1,0 +1,98 @@
+[
+  {
+    "Category": "Accessory",
+    "Attribute": "Shields"
+  },
+  {
+    "Category": "Alignment",
+    "Attribute": "Special"
+  },
+  {
+    "Category": "Animal",
+    "Attribute": "Health"
+  },
+  {
+    "Category": "Blockchain",
+    "Attribute": "Special"
+  },
+  {
+    "Category": "Clothing",
+    "Attribute": "Shields"
+  },
+  {
+    "Category": "Color",
+    "Attribute": "Attack"
+  },
+  {
+    "Category": "Currency",
+    "Attribute": "Special"
+  },
+  {
+    "Category": "Elemental",
+    "Attribute": "Shields"
+  },
+  {
+    "Category": "Expression",
+    "Attribute": "Health"
+  },
+  {
+    "Category": "Facial",
+    "Attribute": "Health"
+  },
+  {
+    "Category": "Food",
+    "Attribute": "Health"
+  },
+  {
+    "Category": "Gem",
+    "Attribute": "Shields"
+  },
+  {
+    "Category": "Hair",
+    "Attribute": "Health"
+  },
+  {
+    "Category": "Liquid",
+    "Attribute": "Health"
+  },
+  {
+    "Category": "Location",
+    "Attribute": "Attack"
+  },
+  {
+    "Category": "Magic",
+    "Attribute": "Attack"
+  },
+  {
+    "Category": "Metal",
+    "Attribute": "Shields"
+  },
+  {
+    "Category": "Monster",
+    "Attribute": "Attack"
+  },
+  {
+    "Category": "Profession",
+    "Attribute": "Attack"
+  },
+  {
+    "Category": "Space",
+    "Attribute": "Special"
+  },
+  {
+    "Category": "Sport",
+    "Attribute": "Attack"
+  },
+  {
+    "Category": "Texture",
+    "Attribute": "Shields"
+  },
+  {
+    "Category": "Weapon",
+    "Attribute": "Attack"
+  },
+  {
+    "Category": "Body",
+    "Attribute": "Health"
+  }
+]

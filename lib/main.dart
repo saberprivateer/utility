@@ -36,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final nftNumber = TextEditingController();
   bool isLoading = true;
   List llTags = [];
+  List powerMap = [];
 
   @override
   void initState() {
@@ -46,17 +47,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> getLazyLionTags() async {
-    late Client httpClient;
-    httpClient = Client();
-    String URL = "https://script.google.com/macros/s/AKfycbx0Vt3s67qnOaQJHdKl0EJ3-g2f_-1FWh-HuUyN3HkjnbetAhFh4Zt1q7vIKMoSTjT0Rg/exec";
-    return await httpClient.get(Uri.parse(URL),headers: {'Content-Type': 'application/json'}).then((response) {
-      //print(response.body);
-      List tagString = jsonDecode(response.body);
-      print('found tagString?');
-      print(tagString[0]['Attribute']);
-      llTags = tagString;
-    });
+    String getTags = await rootBundle.loadString('assets/jsons/lazyliontags.json');
+    String getPower = await rootBundle.loadString('assets/jsons/powermapping.json');
+    llTags = await jsonDecode(getTags);
+    powerMap = await jsonDecode(getPower);
   }
+
+  // Future<void> getLazyLionTags() async {
+  //   late Client httpClient;
+  //   httpClient = Client();
+  //   String URL = "https://script.google.com/macros/s/AKfycbx0Vt3s67qnOaQJHdKl0EJ3-g2f_-1FWh-HuUyN3HkjnbetAhFh4Zt1q7vIKMoSTjT0Rg/exec";
+  //   return await httpClient.get(Uri.parse(URL),headers: {'Content-Type': 'application/json'}).then((response) {
+  //     //print(response.body);
+  //     List tagString = jsonDecode(response.body);
+  //     print('found tagString?');
+  //     print(tagString[0]['Attribute']);
+  //     llTags = tagString;
+  //   });
+  // }
 
   Future<List<dynamic>> callFunction(String name,
       {int nftNumber = 9806}) async {
@@ -157,9 +165,16 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.restart_alt),
             tooltip: 'Restart',
             onPressed: () {
-              print('lltags???');
-              print(llTags);
+              //print('lltags???');
+              //print(llTags);
               getLazyLionTags();
+              print('powers???');
+              //print(powerMap);
+              var a = powerMap.singleWhere((element) => element['Category'] == 'Food');
+              print(a);
+              // print(a[0]);
+              print(a['Attribute']);
+              // print(a[0]['Attribute']);
             }),
         IconButton(
             icon: const Icon(Icons.description),
@@ -325,11 +340,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void whatCategory(int i) {
+    var boost;
     for (int j = 0; j < llTags.length; j++){
       if(llTags[j]['Attribute'] == currentJson['attributes'][i]['trait_type']) {
         //print(llTags[j]['Attribute']+' = '+currentJson['attributes'][i]['trait_type']);
         if(llTags[j]['Trait']==currentJson['attributes'][i]['value']) {
-          print(llTags[j]['Category']);
+          //print(llTags[j]['Category']);
+          boost = powerMap.singleWhere((element) => element['Category'] == llTags[j]['Category'], orElse: () => {
+            "Attribute": 'Empty'
+          });
+          print(boost['Attribute']);
         }
       }
     }

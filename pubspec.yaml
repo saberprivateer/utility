@@ -54,6 +54,7 @@ flutter:
     - abis/lazy_lions.json
     - chain_runners.json
     - assets/images/
+    - assets/jsons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

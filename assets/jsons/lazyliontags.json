@@ -1,0 +1,1115 @@
+[
+  {
+    "Attribute": "Background",
+    "Trait": "Gold",
+    "Category": "Metal",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Elemental",
+    "Category": "Magic",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Rune",
+    "Category": "Magic",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Magenta",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Amethyst",
+    "Category": "Gem",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Copper",
+    "Category": "Metal",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Blue",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Seagreen",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Forrest Green",
+    "Category": "Location",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Mithril",
+    "Category": "Magic",
+    "Secondary": "Metal",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Iron",
+    "Category": "Metal",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Light purple",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Silver",
+    "Category": "Metal",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Adamant",
+    "Category": "Magic",
+    "Secondary": "Metal",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Background",
+    "Trait": "Khakhi",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Scratched Up",
+    "Category": "Texture",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Pink",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Galaxy",
+    "Category": "Space",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "White",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Zebra",
+    "Category": "Animal",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Spotted Leopard",
+    "Category": "Animal",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Red",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Lizard Blue",
+    "Category": "Animal",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Spots",
+    "Category": "Texture",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Grey",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Black",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Tan",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Zombie",
+    "Category": "Monster",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Brown",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Body",
+    "Trait": "Standard",
+    "Category": "",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Black Hoodie",
+    "Category": "Color",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Leopard Fur Coat",
+    "Category": "Animal",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Lederhosen",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Space Suit",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Coconut Bra",
+    "Category": "Food",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Gladiator Armour",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Lion Shirt",
+    "Category": "Animal",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Referee shirt",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Ripped Shirt - Black",
+    "Category": "Texture",
+    "Secondary": "Clothing",
+    "Tertiary": "Color"
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Football Jersey - Red",
+    "Category": "Sport",
+    "Secondary": "Clothing",
+    "Tertiary": "Color"
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Ripped Shirt - White",
+    "Category": "Texture",
+    "Secondary": "Clothing",
+    "Tertiary": "Color"
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Ranger Shirt",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Chef Uniform",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Police Uniform",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Ethereum Business Shirt",
+    "Category": "Blockchain",
+    "Secondary": "Profession",
+    "Tertiary": "Clothing"
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Nothing",
+    "Category": "",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Gold Chain",
+    "Category": "Metal",
+    "Secondary": "Accessory",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Floaties",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Bodygear",
+    "Trait": "Business Shirt",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Earing",
+    "Trait": "Dagger",
+    "Category": "Weapon",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Earing",
+    "Trait": "Ethereum",
+    "Category": "Blockchain",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Earing",
+    "Trait": "Lion Head",
+    "Category": "Animal",
+    "Secondary": "Body",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Earing",
+    "Trait": "Diamond Stud",
+    "Category": "Gem",
+    "Secondary": "Accessory",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Earing",
+    "Trait": "Green Ball",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Earing",
+    "Trait": "Small Gold Hoop",
+    "Category": "Metal",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Earing",
+    "Trait": "Nothing",
+    "Category": "",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Evil",
+    "Category": "Alignment",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "BTC Eyes",
+    "Category": "Blockchain",
+    "Secondary": "Facial",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Eye Mask",
+    "Category": "Facial",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Raised Eyebrow",
+    "Category": "Facial",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Winking",
+    "Category": "Facial",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Fake Glasses",
+    "Category": "Texture",
+    "Secondary": "Accessory",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "3D Glasses",
+    "Category": "Texture",
+    "Secondary": "Accessory",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Goofy Eyes",
+    "Category": "Texture",
+    "Secondary": "Facial",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Monocle",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Dork Glasses",
+    "Category": "Alignment",
+    "Secondary": "Accessory",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Anime - Blue",
+    "Category": "Alignment",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Closed",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Money Eyes",
+    "Category": "Currency",
+    "Secondary": "Facial",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Water Goggles",
+    "Category": "Liquid",
+    "Secondary": "Accessory",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Anime - Brown",
+    "Category": "Alignment",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Concerned",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Sad",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Stoner",
+    "Category": "Alignment",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Shades",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Surprised",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Sleepy",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Eyes",
+    "Trait": "Angry",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Party Hat",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Crown",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Santa Hat",
+    "Category": "Magic",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Wizard Hat",
+    "Category": "Magic",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "LAZY Hat",
+    "Category": "Expression",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Safari Hat",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Straw Beach Hat",
+    "Category": "Location",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Top Hat",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Sea Captain Hat",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Black Cap",
+    "Category": "Color",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Sheriff Hat",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Spinner Hat",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Bunny Ears",
+    "Category": "Animal",
+    "Secondary": "Body",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Pirate Hat",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Police Hat",
+    "Category": "Profession",
+    "Secondary": "Clothing",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Bucket Hat",
+    "Category": "Clothing",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Horns",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Halo",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Headgear",
+    "Trait": "Nothing",
+    "Category": "",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Black And Gold",
+    "Category": "Color",
+    "Secondary": "Metal",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Blue",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Fire",
+    "Category": "Hair",
+    "Secondary": "Elemental",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Ice",
+    "Category": "Hair",
+    "Secondary": "Elemental",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Purple",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Ice",
+    "Category": "Hair",
+    "Secondary": "Elemental",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Purple",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "White",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Bloody",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Green",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Orange",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Rainbow",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Emerald",
+    "Category": "Gem",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Red",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Blue",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Blue",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Ice",
+    "Category": "Elemental",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Fire",
+    "Category": "Hair",
+    "Secondary": "Elemental",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Emerald",
+    "Category": "Hair",
+    "Secondary": "Gem",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Fire",
+    "Category": "Elemental",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Teal",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - White",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - Orange",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up - White",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Red",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Rainbow",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Purple",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Rainbow",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Orange",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up Top Knot - Black",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Red",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Black",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Double Tied Up Top Knot - Brown",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Top Knot - Brown",
+    "Category": "Hair",
+    "Secondary": "Color",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Black",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mane",
+    "Trait": "Brown",
+    "Category": "Color",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Meat",
+    "Category": "Food",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Sad",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Money Mouth",
+    "Category": "Currency",
+    "Secondary": "Facial",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Cigar",
+    "Category": "Food",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Whistle",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Party Horn",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Smirk J",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Gargling",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Yawning",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Bloody Mouth",
+    "Category": "Color",
+    "Secondary": "Facial",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Tongue Out Saliva",
+    "Category": "Facial",
+    "Secondary": "Liquid",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Licking Nose",
+    "Category": "Facial",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Gold Smile",
+    "Category": "Metal",
+    "Secondary": "Expression",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Grin J",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Pipe",
+    "Category": "Accessory",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Smirk",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Tongue Out",
+    "Category": "Facial",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Surprised",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Yelling",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Grin Ciggy",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Biting Lip",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Bubble Gum",
+    "Category": "Food",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Roaring",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Grin",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Big Smile",
+    "Category": "Expression",
+    "Secondary": "",
+    "Tertiary": ""
+  },
+  {
+    "Attribute": "Mouth",
+    "Trait": "Standard",
+    "Category": "",
+    "Secondary": "",
+    "Tertiary": ""
+  }
+]
