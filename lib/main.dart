@@ -128,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int myHealth = 10;
   int myShields = 10;
   int myAttack = 10;
+  var myStartingStats = [10,10,10];
   var myStats = [10, 10, 10];
   var theirStats = [12, 12, 5];
   var tempStats = [0,0,0];
@@ -254,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ? Text('TURN ' + turns.toString())
                 : Text('Select a starting attribute.'),
             Visibility(
-              visible: (championSelect && (selectedAttr.length == round-1) && !battling),
+              visible: (championSelect && (selectedAttr.length == round) && !battling),
               child: startFight(),
             ),
             Visibility(visible: battling && !fightOver, child: continueFight()),
@@ -304,6 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget continueFight() {
     return ElevatedButton(
         onPressed: () {
+          print('next round of fighting!');
           fightRound();
         },
         child: Text('Fight!'));
@@ -312,6 +314,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget finishFight() {
     return ElevatedButton(
         onPressed: () {
+          print('The fight is over...going back to management');
           if (myCurrentStats[0] < 0) {
             championSelect = false;
           } else {
@@ -320,7 +323,6 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             myCurrentStats = List.from(myStats);
             battling = !battling;
-            print('rounds = '+round.toString());
           });
         },
         child: Text(myCurrentStats[0] > 0 ? 'You Win!' : 'You Lose :('));
@@ -329,13 +331,20 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget startFight() {
     return ElevatedButton(
         onPressed: () {
-          print('battle now with selectedAttr: ' + selectedAttr.toString());
+          print('Selected an attribute and starting the fight!');
+          //TODO: make this generalizable
+          myStats[0] += tempStats[0];
+          myStats[1] += tempStats[1];
+          myStats[2] += tempStats[2];
+          myCurrentStats = List.from(myStats);
           setState(() {
+            //TODO: Function for picking a random fighter and assigning stats.
             theirCurrentStats = List.from(theirStats);
             turns = 1;
             turn = true;
             fightOver = false;
             battling = true;
+            tempStats = [0,0,0];
           });
         },
         child: Text('Start Fight!'));
@@ -360,8 +369,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // print('BOOST');
     // print(boost['Attribute']);
     tempStats = [0,0,0];
-    print('is tempt stats 0?');
-    print(tempStats);
     if (boost['Attribute'] == 'Shields') {
       tempStats[1]=3;
     }
@@ -537,6 +544,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   ElevatedButton(
                       onPressed: () {
+                        print('selected an NFT #');
                         int a;
                         if (nftNumber.text != '') {
                           a = int.parse(nftNumber.text);
@@ -546,14 +554,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         //print(int.parse(nftNumber.text));
                         //testProvider();
                         //testInterface();
-
                         setState(() {
+                          //TODO: Move this into an initializer?
                           isLoading = true;
                           championSelect = true;
                           selectedAttr.clear();
                           round = 1;
                           battling = false;
                           fightOver = false;
+                          //TODO: Different starting stats based on stuff?
+                          myStats = List.from(myStartingStats);
+                          myCurrentStats = List.from(myStats);
+                          tempStats = [0,0,0];
                         });
                         getURIll(a);
                       },
