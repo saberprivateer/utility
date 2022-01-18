@@ -359,6 +359,9 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     // print('BOOST');
     // print(boost['Attribute']);
+    tempStats = [0,0,0];
+    print('is tempt stats 0?');
+    print(tempStats);
     if (boost['Attribute'] == 'Shields') {
       tempStats[1]=3;
     }
@@ -421,9 +424,9 @@ class _MyHomePageState extends State<MyHomePage> {
     String shields;
     String attack;
     if (rotate == 0) {
-      health = myCurrentStats[0].toString();
-      shields = myCurrentStats[1].toString();
-      attack = myCurrentStats[2].toString();
+      health = (myCurrentStats[0]+tempStats[0]).toString();
+      shields = (myCurrentStats[1]+tempStats[1]).toString();
+      attack = (myCurrentStats[2]+tempStats[2]).toString();
     } else {
       health = theirCurrentStats[0].toString();
       shields = theirCurrentStats[1].toString();
