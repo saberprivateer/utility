@@ -130,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int myAttack = 10;
   var myStats = [10, 10, 10];
   var theirStats = [12, 12, 5];
+  var tempStats = [0,0,0];
   late var myCurrentStats = List.from(myStats);
   late var theirCurrentStats = List.from(theirStats);
   int theirHealth = 12;
@@ -253,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ? Text('TURN ' + turns.toString())
                 : Text('Select a starting attribute.'),
             Visibility(
-              visible: (championSelect && selectedAttr.length > 0 && !battling),
+              visible: (championSelect && (selectedAttr.length == round-1) && !battling),
               child: startFight(),
             ),
             Visibility(visible: battling && !fightOver, child: continueFight()),
@@ -332,6 +333,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             theirCurrentStats = List.from(theirStats);
             turns = 1;
+            turn = true;
             fightOver = false;
             battling = true;
           });
@@ -349,27 +351,27 @@ class _MyHomePageState extends State<MyHomePage> {
           "Category": "Missing"
         }
     );
-    print('checker');
-    print(checker);
-    print(checker['Category']);
+    // print('checker');
+    // print(checker);
+    // print(checker['Category']);
     boost = powerMap.singleWhere((element) => element['Category'] == checker['Category'], orElse: () => {
       "Attribute": 'Empty'
     });
-    print('BOOST');
-    print(boost['Attribute']);
+    // print('BOOST');
+    // print(boost['Attribute']);
     if (boost['Attribute'] == 'Shields') {
-      myCurrentStats[1]+=3;
+      tempStats[1]=3;
     }
     if (boost['Attribute'] == 'Health') {
-      myCurrentStats[0]+=3;
+      tempStats[0]+=3;
     }
     if (boost['Attribute'] == 'Attack') {
-      myCurrentStats[2]+=3;
+      tempStats[2]+=3;
     }
     if (boost['Attribute'] == 'Empty') {
-      myCurrentStats[0]+=1;
-      myCurrentStats[1]+=1;
-      myCurrentStats[2]+=1;
+      tempStats[0]+=1;
+      tempStats[1]+=1;
+      tempStats[2]+=1;
     }
   }
 
@@ -383,13 +385,17 @@ class _MyHomePageState extends State<MyHomePage> {
             for (int i = 0; i < currentJson['attributes'].length; i++)
               InkWell(
                   onTap: () {
-                    whatCategory(i);
-                    if (selectedAttr.length < round) {
-                      selectedAttr.add(i);
+                    if (selectedAttr.contains(i)) {
+                      return;
                     } else {
-                      selectedAttr[round - 1] = i;
+                      whatCategory(i);
+                      if (selectedAttr.length < round) {
+                        selectedAttr.add(i);
+                      } else {
+                        selectedAttr[round - 1] = i;
+                      }
+                      setState(() {});
                     }
-                    setState(() {});
                   },
                   child: Card(
                       color: selectedAttr.any((e) => e == i)
