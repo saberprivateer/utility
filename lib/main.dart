@@ -146,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   late Web3Client ethClient;
   final String blockchainUrl = "https://cloudflare-eth.com";
   var selectedAttr = [];
+  var enemyAttr = [];
   int round = 1;
   int myHealth = 10;
   int myShields = 10;
@@ -193,7 +194,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
             tooltip: 'Restart',
             onPressed: () {
               // _controller.stop();
-              _controller.
+              _controller.animateTo(1);
+              // _controller.reverse();
 
 
             }),
@@ -293,6 +295,19 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     );
   }
 
+  void challengerAttributes() {
+    int l = enemy['attributes'].length;
+    enemyAttr = List.generate(l, (i) => i);
+    enemyAttr.shuffle();
+    int j;
+    for (int i=0;i<round;i++){
+      j=enemyAttr[i]+1;
+      print(enemy['attributes'][j]);
+      //TODO: grab the info and add it to stats.
+    }
+    print(enemyAttr);
+  }
+
   void newChallenger() {
     print('A new challenger approaches!');
     Random random = new Random();
@@ -302,6 +317,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       setState(() {
         enemy = charJson;
         newChallengerLoaded = true;
+        challengerAttributes();
       });
     });
   }
@@ -416,6 +432,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   void whatCategory(int i) {
+    //TODO: grab info for enemy too
     var boost;
     var checker;
     checker = llTags
@@ -519,19 +536,16 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 transform: Matrix4.rotationY(Math.pi * rotate),
                 // transform: Matrix4.translation(),
                 child: Stack(alignment: Alignment.center, children: [
-                      SlideTransition(
-                        position: _offsetAnimation,
-                        child: CachedNetworkImage(
-                            imageUrl: url,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                            errorWidget: (context, url, error) =>
-                                // Icon(Icons.error),
-                          SizedBox(),
-                          ),
-                      ),
+                      CachedNetworkImage(
+                          imageUrl: url,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              // Icon(Icons.error),
+                        SizedBox(),
+                        ),
                   // Image(
                   //         image: NetworkImage(currentJson['image']),
                   //       ),
