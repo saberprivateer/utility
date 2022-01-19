@@ -30,6 +30,9 @@ dependencies:
   # flutter_web3: ^2.1.6
   http: ^0.13.4
   web3dart: ^2.3.3
+  cached_network_image: ^3.2.0
+  animated_text_kit: ^4.2.1
+  flip_board: ^0.6.1
   # flutter_svg: ^0.22.0
   # flutter_html: ^2.2.1
 

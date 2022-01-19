@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -32,11 +35,28 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   final nftNumber = TextEditingController();
-  bool isLoading = true;
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: true);
+  late Animation<Offset> _offsetAnimation = Tween<Offset>(
+    begin: Offset.zero,
+    end: Offset(1.5, 0.0),
+  ).animate(CurvedAnimation(
+    parent: _controller,
+    curve: Curves.elasticIn,
+  ));
   List llTags = [];
   List powerMap = [];
+  double slider = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -47,8 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> getLazyLionTags() async {
-    String getTags = await rootBundle.loadString('assets/jsons/lazyliontags.json');
-    String getPower = await rootBundle.loadString('assets/jsons/powermapping.json');
+    String getTags =
+        await rootBundle.loadString('assets/jsons/lazyliontags.json');
+    String getPower =
+        await rootBundle.loadString('assets/jsons/powermapping.json');
     llTags = await jsonDecode(getTags);
     powerMap = await jsonDecode(getPower);
   }
@@ -100,9 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
     String lazylion = await fetchll(tokenstr);
     //print(lazylion);
     Map<String, dynamic> lljson = jsonDecode(lazylion);
+    // return lljson;
     setState(() {
-      //isLoading = false;
-      currentJson = lljson;
+      charJson = lljson;
     });
   }
 
@@ -128,10 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int myHealth = 10;
   int myShields = 10;
   int myAttack = 10;
-  var myStartingStats = [10,10,10];
+  var myStartingStats = [10, 10, 10];
   var myStats = [10, 10, 10];
   var theirStats = [12, 12, 5];
-  var tempStats = [0,0,0];
+  var tempStats = [0, 0, 0];
   late var myCurrentStats = List.from(myStats);
   late var theirCurrentStats = List.from(theirStats);
   int theirHealth = 12;
@@ -141,10 +163,13 @@ class _MyHomePageState extends State<MyHomePage> {
   bool turn = true;
   int turns = 1;
   bool fightOver = false;
+  bool newChallengerLoaded = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Map<String, dynamic> currentJson = {};
+  Map<String, dynamic> enemy = {};
+  Map<String, dynamic> charJson = {};
 
   final List<String> elements = [
     //"Loot",
@@ -167,21 +192,17 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.restart_alt),
             tooltip: 'Restart',
             onPressed: () {
-              //print('lltags???');
-              //print(llTags);
-              getLazyLionTags();
-              print('powers???');
-              //print(powerMap);
-              var a = powerMap.singleWhere((element) => element['Category'] == 'Food');
-              print(a);
-              // print(a[0]);
-              print(a['Attribute']);
-              // print(a[0]['Attribute']);
+              // _controller.stop();
+              _controller.
+
+
             }),
         IconButton(
             icon: const Icon(Icons.description),
             tooltip: 'White Paper',
-            onPressed: () {}),
+            onPressed: () {
+              _controller.reset();
+            }),
 /*
         PopupMenuButton<int>(
           onSelected: (int result) {
@@ -243,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
-                    child: battleCard(0),
+                    child: battleCard(0,currentJson['image']??''),
                   ),
                   Flexible(child: rightHandSide()),
                 ],
@@ -251,19 +272,38 @@ class _MyHomePageState extends State<MyHomePage> {
             else
               SizedBox(),
             SizedBox(height: 20),
-            battling
-                ? Text('TURN ' + turns.toString())
-                : Text('Select a starting attribute.'),
+            if (battling)
+              Text('TURN ' + turns.toString())
+            else if (round == 1)
+              Text('Select a starting attribute.')
+            else
+              Text('Select another attribute...grow stronger.'),
+            SizedBox(height: 20),
             Visibility(
-              visible: (championSelect && (selectedAttr.length == round) && !battling),
+              visible: (championSelect &&
+                  (selectedAttr.length == round) &&
+                  !battling),
               child: startFight(),
             ),
-            Visibility(visible: battling && !fightOver, child: continueFight()),
+            Visibility(visible: battling && !fightOver && newChallengerLoaded, child: continueFight()),
             Visibility(visible: battling && fightOver, child: finishFight())
           ],
         ),
       ),
     );
+  }
+
+  void newChallenger() {
+    print('A new challenger approaches!');
+    Random random = new Random();
+    int randomNumber = random.nextInt(10000);
+    print(randomNumber);
+    getURIll(randomNumber).then((_) {
+      setState(() {
+        enemy = charJson;
+        newChallengerLoaded = true;
+      });
+    });
   }
 
   void fightRound() {
@@ -303,12 +343,34 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget continueFight() {
+    // return MaterialButton(
+    //   color: Colors.blue,
+    //     shape: CircleBorder(),
+    //     onPressed: () {});
     return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          // primary: Colors.red
+        ),
         onPressed: () {
           print('next round of fighting!');
           fightRound();
         },
-        child: Text('Fight!'));
+        child: Padding(
+            padding: const EdgeInsets.all(50.0),
+            child: DefaultTextStyle(
+              style: const TextStyle(fontSize: 24.0),
+              child: AnimatedTextKit(
+                animatedTexts: [WavyAnimatedText('Fight!')],
+                onTap: () {
+                  print('next round of fighting!');
+                  fightRound();
+                },
+              ),
+            )
+            // Text('Fight!',
+            //     style: TextStyle(color: Colors.white, fontSize: 24)),
+            ));
   }
 
   Widget finishFight() {
@@ -323,6 +385,8 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             myCurrentStats = List.from(myStats);
             battling = !battling;
+            newChallengerLoaded = false;
+            enemy['image'] = '';
           });
         },
         child: Text(myCurrentStats[0] > 0 ? 'You Win!' : 'You Lose :('));
@@ -344,8 +408,9 @@ class _MyHomePageState extends State<MyHomePage> {
             turn = true;
             fightOver = false;
             battling = true;
-            tempStats = [0,0,0];
+            tempStats = [0, 0, 0];
           });
+          newChallenger();
         },
         child: Text('Start Fight!'));
   }
@@ -354,34 +419,34 @@ class _MyHomePageState extends State<MyHomePage> {
     var boost;
     var checker;
     checker = llTags
-        .where((element) => element['Attribute']==currentJson['attributes'][i]['trait_type'])
-        .singleWhere((element) => element['Trait']==currentJson['attributes'][i]['value'],
-        orElse: () => {
-          "Category": "Missing"
-        }
-    );
+        .where((element) =>
+            element['Attribute'] == currentJson['attributes'][i]['trait_type'])
+        .singleWhere(
+            (element) =>
+                element['Trait'] == currentJson['attributes'][i]['value'],
+            orElse: () => {"Category": "Missing"});
     // print('checker');
     // print(checker);
     // print(checker['Category']);
-    boost = powerMap.singleWhere((element) => element['Category'] == checker['Category'], orElse: () => {
-      "Attribute": 'Empty'
-    });
+    boost = powerMap.singleWhere(
+        (element) => element['Category'] == checker['Category'],
+        orElse: () => {"Attribute": 'Empty'});
     // print('BOOST');
     // print(boost['Attribute']);
-    tempStats = [0,0,0];
+    tempStats = [0, 0, 0];
     if (boost['Attribute'] == 'Shields') {
-      tempStats[1]=3;
+      tempStats[1] = 3;
     }
     if (boost['Attribute'] == 'Health') {
-      tempStats[0]+=3;
+      tempStats[0] += 3;
     }
     if (boost['Attribute'] == 'Attack') {
-      tempStats[2]+=3;
+      tempStats[2] += 3;
     }
     if (boost['Attribute'] == 'Empty') {
-      tempStats[0]+=1;
-      tempStats[1]+=1;
-      tempStats[2]+=1;
+      tempStats[0] += 1;
+      tempStats[1] += 1;
+      tempStats[2] += 1;
     }
   }
 
@@ -409,7 +474,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Card(
                       color: selectedAttr.any((e) => e == i)
-                          ? Colors.blue
+                          ? (selectedAttr.indexOf(i) == (round - 1))
+                              ? Colors.blue
+                              : Colors.grey
                           : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
@@ -426,14 +493,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget battleCard(int rotate) {
+  Widget battleCard(int rotate, String url) {
     String health;
     String shields;
     String attack;
+    //TODO: parameter?
     if (rotate == 0) {
-      health = (myCurrentStats[0]+tempStats[0]).toString();
-      shields = (myCurrentStats[1]+tempStats[1]).toString();
-      attack = (myCurrentStats[2]+tempStats[2]).toString();
+      health = (myCurrentStats[0] + tempStats[0]).toString();
+      shields = (myCurrentStats[1] + tempStats[1]).toString();
+      attack = (myCurrentStats[2] + tempStats[2]).toString();
     } else {
       health = theirCurrentStats[0].toString();
       shields = theirCurrentStats[1].toString();
@@ -449,12 +517,24 @@ class _MyHomePageState extends State<MyHomePage> {
               Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.rotationY(Math.pi * rotate),
+                // transform: Matrix4.translation(),
                 child: Stack(alignment: Alignment.center, children: [
-                  (currentJson['image'] == null)
-                      ? SizedBox()
-                      : Image(
-                          image: NetworkImage(currentJson['image']),
-                        ),
+                      SlideTransition(
+                        position: _offsetAnimation,
+                        child: CachedNetworkImage(
+                            imageUrl: url,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                // Icon(Icons.error),
+                          SizedBox(),
+                          ),
+                      ),
+                  // Image(
+                  //         image: NetworkImage(currentJson['image']),
+                  //       ),
                   (_explode && (turn == rotate.isEven))
                       ? Image(
                           height: 100,
@@ -505,7 +585,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         return attributesList();
       case 2:
-        return battleCard(1);
+        return battleCard(1,enemy['image']??'');
       default:
         return SizedBox();
     }
@@ -516,10 +596,18 @@ class _MyHomePageState extends State<MyHomePage> {
       margin: EdgeInsets.all(10),
       child:
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-        Image(
-            height: 100,
-            width: 100,
-            image: NetworkImage('https://www.loot.exchange/lootbag.png')),
+        CachedNetworkImage(
+          width: 100,
+          height: 100,
+          imageUrl: "https://www.loot.exchange/lootbag.png",
+          // errorWidget: (context, url, error) => Icon(Icons.error),
+          fadeOutDuration: const Duration(milliseconds: 500),
+          fadeInDuration: const Duration(seconds: 1),
+        ),
+        // Image(
+        // height: 100,
+        // width: 100,
+        // image: NetworkImage('https://www.loot.exchange/lootbag.png')),
         SizedBox(
           width: 200,
           child: Padding(
@@ -556,7 +644,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         //testInterface();
                         setState(() {
                           //TODO: Move this into an initializer?
-                          isLoading = true;
                           championSelect = true;
                           selectedAttr.clear();
                           round = 1;
@@ -565,9 +652,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           //TODO: Different starting stats based on stuff?
                           myStats = List.from(myStartingStats);
                           myCurrentStats = List.from(myStats);
-                          tempStats = [0,0,0];
+                          tempStats = [0, 0, 0];
+                          newChallengerLoaded = false;
                         });
-                        getURIll(a);
+                        getURIll(a).then((_) {
+                          setState(() {
+                            currentJson = charJson;
+                          });
+                        });
                       },
                       child: const Text('Feeling lucky?')),
                 ],
@@ -586,8 +678,17 @@ class _MyHomePageState extends State<MyHomePage> {
         margin: EdgeInsets.all(10),
         child: Padding(
             padding: EdgeInsets.all(20),
-            child: Text(
-              'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',
-            )));
+            child:
+            // AnimatedTextKit(
+            //   animatedTexts: [
+            //     TyperAnimatedText('Reality has been fractured.'),
+            //     TyperAnimatedText(
+            //         'Tribes must compete to earn \$utility for their survival.'),
+            //     TyperAnimatedText('What tribe do you champion?')
+            //   ],
+            // )
+            Text(
+              'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',)
+            ));
   }
 }
