@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -35,7 +36,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   final nftNumber = TextEditingController();
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
@@ -75,21 +77,9 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     powerMap = await jsonDecode(getPower);
   }
 
-  // Future<void> getLazyLionTags() async {
-  //   late Client httpClient;
-  //   httpClient = Client();
-  //   String URL = "https://script.google.com/macros/s/AKfycbx0Vt3s67qnOaQJHdKl0EJ3-g2f_-1FWh-HuUyN3HkjnbetAhFh4Zt1q7vIKMoSTjT0Rg/exec";
-  //   return await httpClient.get(Uri.parse(URL),headers: {'Content-Type': 'application/json'}).then((response) {
-  //     //print(response.body);
-  //     List tagString = jsonDecode(response.body);
-  //     print('found tagString?');
-  //     print(tagString[0]['Attribute']);
-  //     llTags = tagString;
-  //   });
-  // }
-
   Future<List<dynamic>> callFunction(String name,
       {int nftNumber = 9806}) async {
+    print('call function');
     final contract = await getContract();
     final function = contract.function(name);
     final result = await ethClient.call(
@@ -118,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     print('get the URI');
     List<dynamic> tokenURI =
         await callFunction("tokenURI", nftNumber: nftNumber);
+    print('didnt get here?');
     String tokenstr = tokenURI[0];
     String lazylion = await fetchll(tokenstr);
     //print(lazylion);
@@ -129,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   Future<DeployedContract> getContract() async {
+    print('getting that contract');
     //obtain our smart contract using rootbundle to access our json file
     //String abiFile = await rootBundle.loadString("abis/chain_runners.json");
     String abiFilell = await rootBundle.loadString("abis/lazy_lions.json");
@@ -165,6 +157,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   int turns = 1;
   bool fightOver = false;
   bool newChallengerLoaded = false;
+  bool winner = false;
+  bool loser = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -196,8 +190,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               // _controller.stop();
               _controller.animateTo(1);
               // _controller.reverse();
-
-
             }),
         IconButton(
             icon: const Icon(Icons.description),
@@ -238,6 +230,13 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           children: <Widget>[
             explainer(),
             nftSelect(),
+            (!winner && !loser && championSelect)
+                ? Text('ROUND $round',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        fontFamily: 'Horizon',
+                        fontWeight: FontWeight.bold))
+                : SizedBox(),
             SizedBox(
                 //height: 300,
                 //fit: FlexFit.tight,
@@ -266,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
-                    child: battleCard(0,currentJson['image']??''),
+                    child: battleCard(0, currentJson['image'] ?? ''),
                   ),
                   Flexible(child: rightHandSide()),
                 ],
@@ -276,19 +275,28 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
             SizedBox(height: 20),
             if (battling)
               Text('TURN ' + turns.toString())
-            else if (round == 1)
+            else if (round == 1 && championSelect)
               Text('Select a starting attribute.')
-            else
+            else if (!winner && !loser && championSelect)
               Text('Select another attribute...grow stronger.'),
             SizedBox(height: 20),
             Visibility(
               visible: (championSelect &&
                   (selectedAttr.length == round) &&
-                  !battling),
+                  !battling &&
+                  !winner &&
+                  !loser),
               child: startFight(),
             ),
-            Visibility(visible: battling && !fightOver && newChallengerLoaded, child: continueFight()),
-            Visibility(visible: battling && fightOver, child: finishFight())
+            Visibility(
+                visible: battling && !fightOver && newChallengerLoaded,
+                child: continueFight()),
+            Visibility(visible: battling && fightOver, child: finishFight()),
+            if (winner) triumph()
+            // if (winner) ElevatedButton(onPressed: () {resetGame(); setState(() {
+            //   championSelect = false;
+            // });}, child: triumph())
+            // //Text('You have Play again')),
           ],
         ),
       ),
@@ -300,8 +308,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     enemyAttr = List.generate(l, (i) => i);
     enemyAttr.shuffle();
     int j;
-    for (int i=0;i<round;i++){
-      j=enemyAttr[i]+1;
+    for (int i = 0; i < round; i++) {
+      j = enemyAttr[i] + 1;
       print(enemy['attributes'][j]);
       //TODO: grab the info and add it to stats.
     }
@@ -394,9 +402,13 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         onPressed: () {
           print('The fight is over...going back to management');
           if (myCurrentStats[0] < 0) {
+            loser = true;
             championSelect = false;
           } else {
             round += 1;
+            if (round == 4) {
+              winner = true;
+            }
           }
           setState(() {
             myCurrentStats = List.from(myStats);
@@ -479,7 +491,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                   onTap: () {
                     if (selectedAttr.contains(i)) {
                       return;
-                    } else {
+                    } else if (!winner && !loser) {
                       whatCategory(i);
                       if (selectedAttr.length < round) {
                         selectedAttr.add(i);
@@ -536,16 +548,16 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                 transform: Matrix4.rotationY(Math.pi * rotate),
                 // transform: Matrix4.translation(),
                 child: Stack(alignment: Alignment.center, children: [
-                      CachedNetworkImage(
-                          imageUrl: url,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  CircularProgressIndicator(
-                                      value: downloadProgress.progress),
-                          errorWidget: (context, url, error) =>
-                              // Icon(Icons.error),
+                  CachedNetworkImage(
+                    imageUrl: url,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, error) =>
+                        // Icon(Icons.error),
                         SizedBox(),
-                        ),
+                  ),
                   // Image(
                   //         image: NetworkImage(currentJson['image']),
                   //       ),
@@ -599,25 +611,29 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       case 1:
         return attributesList();
       case 2:
-        return battleCard(1,enemy['image']??'');
+        return battleCard(1, enemy['image'] ?? '');
       default:
         return SizedBox();
     }
   }
 
   Widget nftSelect() {
+    //(kIsWeb) ? print('k is totally web') : print('k is NOT web');
     return Container(
       margin: EdgeInsets.all(10),
       child:
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-        CachedNetworkImage(
-          width: 100,
-          height: 100,
-          imageUrl: "https://www.loot.exchange/lootbag.png",
-          // errorWidget: (context, url, error) => Icon(Icons.error),
-          fadeOutDuration: const Duration(milliseconds: 500),
-          fadeInDuration: const Duration(seconds: 1),
-        ),
+        (!kIsWeb)
+            ? CachedNetworkImage(
+                width: 100,
+                height: 100,
+                imageUrl: "https://www.loot.exchange/lootbag.png",
+                // errorWidget: (context, url, error) => Icon(Icons.error),
+                fadeOutDuration: const Duration(milliseconds: 500),
+                fadeInDuration: const Duration(seconds: 1),
+              )
+            : Image.network('https://www.loot.exchange/lootbag.png',
+                width: 100, height: 100),
         // Image(
         // height: 100,
         // width: 100,
@@ -653,22 +669,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                         } else {
                           a = 9806;
                         }
+                        resetGame();
                         //print(int.parse(nftNumber.text));
                         //testProvider();
                         //testInterface();
-                        setState(() {
-                          //TODO: Move this into an initializer?
-                          championSelect = true;
-                          selectedAttr.clear();
-                          round = 1;
-                          battling = false;
-                          fightOver = false;
-                          //TODO: Different starting stats based on stuff?
-                          myStats = List.from(myStartingStats);
-                          myCurrentStats = List.from(myStats);
-                          tempStats = [0, 0, 0];
-                          newChallengerLoaded = false;
-                        });
                         getURIll(a).then((_) {
                           setState(() {
                             currentJson = charJson;
@@ -685,6 +689,23 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     );
   }
 
+  void resetGame() {
+    setState(() {
+      championSelect = true;
+      winner = false;
+      loser = false;
+      selectedAttr.clear();
+      round = 1;
+      battling = false;
+      fightOver = false;
+      //TODO: Different starting stats based on stuff?
+      myStats = List.from(myStartingStats);
+      myCurrentStats = List.from(myStats);
+      tempStats = [0, 0, 0];
+      newChallengerLoaded = false;
+    });
+  }
+
   Widget explainer() {
     return Card(
         elevation: 3,
@@ -693,16 +714,48 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         child: Padding(
             padding: EdgeInsets.all(20),
             child:
-            // AnimatedTextKit(
-            //   animatedTexts: [
-            //     TyperAnimatedText('Reality has been fractured.'),
-            //     TyperAnimatedText(
-            //         'Tribes must compete to earn \$utility for their survival.'),
-            //     TyperAnimatedText('What tribe do you champion?')
-            //   ],
-            // )
-            Text(
-              'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',)
-            ));
+                // AnimatedTextKit(
+                //   animatedTexts: [
+                //     TyperAnimatedText('Reality has been fractured.'),
+                //     TyperAnimatedText(
+                //         'Tribes must compete to earn \$utility for their survival.'),
+                //     TyperAnimatedText('What tribe do you champion?')
+                //   ],
+                // )
+                Text(
+              'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',
+            )));
+  }
+
+  Widget triumph() {
+    const colorizeColors = [
+      Colors.purple,
+      Colors.blue,
+      Colors.yellow,
+      Colors.red,
+    ];
+
+    const colorizeTextStyle = TextStyle(
+        fontSize: 20.0, fontFamily: 'Horizon', fontWeight: FontWeight.bold);
+
+    return SizedBox(
+      // width: 250.0,
+      child: AnimatedTextKit(
+          animatedTexts: [
+            ColorizeAnimatedText(
+              'You have triumphed! Play again?',
+              textStyle: colorizeTextStyle,
+              colors: colorizeColors,
+            ),
+          ],
+          isRepeatingAnimation: true,
+          totalRepeatCount: 20,
+          onTap: () {
+            resetGame();
+            setState(() {
+              championSelect = false;
+            });
+          }),
+    );
   }
 }
