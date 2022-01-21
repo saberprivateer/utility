@@ -42,7 +42,8 @@ class _MyHomePageState extends State<MyHomePage>
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
     vsync: this,
-  )..repeat(reverse: true);
+  )
+    ..repeat(reverse: true);
   late Animation<Offset> _offsetAnimation = Tween<Offset>(
     begin: Offset.zero,
     end: Offset(1.5, 0.0),
@@ -70,9 +71,9 @@ class _MyHomePageState extends State<MyHomePage>
 
   Future<void> getLazyLionTags() async {
     String getTags =
-        await rootBundle.loadString('assets/jsons/lazyliontags.json');
+    await rootBundle.loadString('assets/jsons/lazyliontags.json');
     String getPower =
-        await rootBundle.loadString('assets/jsons/powermapping.json');
+    await rootBundle.loadString('assets/jsons/powermapping.json');
     llTags = await jsonDecode(getTags);
     powerMap = await jsonDecode(getPower);
   }
@@ -107,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage>
   Future<void> getURIll(int nftNumber) async {
     print('get the URI');
     List<dynamic> tokenURI =
-        await callFunction("tokenURI", nftNumber: nftNumber);
+    await callFunction("tokenURI", nftNumber: nftNumber);
     print('didnt get here?');
     String tokenstr = tokenURI[0];
     String lazylion = await fetchll(tokenstr);
@@ -159,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage>
   bool newChallengerLoaded = false;
   bool winner = false;
   bool loser = false;
+  bool tribeSelected = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -187,9 +189,11 @@ class _MyHomePageState extends State<MyHomePage>
             icon: const Icon(Icons.restart_alt),
             tooltip: 'Restart',
             onPressed: () {
-              // _controller.stop();
-              _controller.animateTo(1);
-              // _controller.reverse();
+                resetGame();
+                championSelect = false;
+                setState(() {
+
+                });
             }),
         IconButton(
             icon: const Icon(Icons.description),
@@ -229,36 +233,15 @@ class _MyHomePageState extends State<MyHomePage>
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             explainer(),
-            nftSelect(),
+            if(!championSelect) tribeSelect(),
+            if(tribeSelected) nftSelect(),
             (!winner && !loser && championSelect)
                 ? Text('ROUND $round',
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontFamily: 'Horizon',
-                        fontWeight: FontWeight.bold))
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontFamily: 'Horizon',
+                    fontWeight: FontWeight.bold))
                 : SizedBox(),
-            SizedBox(
-                //height: 300,
-                //fit: FlexFit.tight,
-/*
-              child: GridView.extent(
-                  maxCrossAxisExtent: 130.0,
-                  crossAxisSpacing: 20.0,
-                  mainAxisSpacing: 20.0,
-                  children: elements
-                      .map((el) => Card(
-                          color: Colors.blue,
-                          child: InkWell(
-                            onTap: () {},
-                            child: Center(
-                                child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(el))),
-                          )))
-                      .toList()),
-*/
-                ),
-            //Text("The NFT's description"),
             if (championSelect)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -275,10 +258,12 @@ class _MyHomePageState extends State<MyHomePage>
             SizedBox(height: 20),
             if (battling)
               Text('TURN ' + turns.toString())
-            else if (round == 1 && championSelect)
-              Text('Select a starting attribute.')
-            else if (!winner && !loser && championSelect)
-              Text('Select another attribute...grow stronger.'),
+            else
+              if (round == 1 && championSelect)
+                Text('Select a starting attribute.')
+              else
+                if (!winner && !loser && championSelect)
+                  Text('Select another attribute...grow stronger.'),
             SizedBox(height: 20),
             Visibility(
               visible: (championSelect &&
@@ -392,9 +377,9 @@ class _MyHomePageState extends State<MyHomePage>
                 },
               ),
             )
-            // Text('Fight!',
-            //     style: TextStyle(color: Colors.white, fontSize: 24)),
-            ));
+          // Text('Fight!',
+          //     style: TextStyle(color: Colors.white, fontSize: 24)),
+        ));
   }
 
   Widget finishFight() {
@@ -449,16 +434,16 @@ class _MyHomePageState extends State<MyHomePage>
     var checker;
     checker = llTags
         .where((element) =>
-            element['Attribute'] == currentJson['attributes'][i]['trait_type'])
+    element['Attribute'] == currentJson['attributes'][i]['trait_type'])
         .singleWhere(
             (element) =>
-                element['Trait'] == currentJson['attributes'][i]['value'],
-            orElse: () => {"Category": "Missing"});
+        element['Trait'] == currentJson['attributes'][i]['value'],
+        orElse: () => {"Category": "Missing"});
     // print('checker');
     // print(checker);
     // print(checker['Category']);
     boost = powerMap.singleWhere(
-        (element) => element['Category'] == checker['Category'],
+            (element) => element['Category'] == checker['Category'],
         orElse: () => {"Attribute": 'Empty'});
     // print('BOOST');
     // print(boost['Attribute']);
@@ -504,8 +489,8 @@ class _MyHomePageState extends State<MyHomePage>
                   child: Card(
                       color: selectedAttr.any((e) => e == i)
                           ? (selectedAttr.indexOf(i) == (round - 1))
-                              ? Colors.blue
-                              : Colors.grey
+                          ? Colors.blue
+                          : Colors.grey
                           : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
@@ -552,19 +537,19 @@ class _MyHomePageState extends State<MyHomePage>
                     imageUrl: url,
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress),
+                        CircularProgressIndicator(
+                            value: downloadProgress.progress),
                     errorWidget: (context, url, error) =>
-                        // Icon(Icons.error),
-                        SizedBox(),
+                    // Icon(Icons.error),
+                    SizedBox(),
                   ),
                   // Image(
                   //         image: NetworkImage(currentJson['image']),
                   //       ),
                   (_explode && (turn == rotate.isEven))
                       ? Image(
-                          height: 100,
-                          image: AssetImage('assets/images/explode.gif'))
+                      height: 100,
+                      image: AssetImage('assets/images/explode.gif'))
                       : SizedBox(),
                 ]),
               ),
@@ -622,18 +607,18 @@ class _MyHomePageState extends State<MyHomePage>
     return Container(
       margin: EdgeInsets.all(10),
       child:
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+      Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
         (!kIsWeb)
             ? CachedNetworkImage(
-                width: 100,
-                height: 100,
-                imageUrl: "https://www.loot.exchange/lootbag.png",
-                // errorWidget: (context, url, error) => Icon(Icons.error),
-                fadeOutDuration: const Duration(milliseconds: 500),
-                fadeInDuration: const Duration(seconds: 1),
-              )
+          width: 100,
+          height: 100,
+          imageUrl: "https://www.loot.exchange/lootbag.png",
+          // errorWidget: (context, url, error) => Icon(Icons.error),
+          fadeOutDuration: const Duration(milliseconds: 500),
+          fadeInDuration: const Duration(seconds: 1),
+        )
             : Image.network('https://www.loot.exchange/lootbag.png',
-                width: 100, height: 100),
+            width: 100, height: 100),
         // Image(
         // height: 100,
         // width: 100,
@@ -670,6 +655,9 @@ class _MyHomePageState extends State<MyHomePage>
                           a = 9806;
                         }
                         resetGame();
+                        setState(() {
+                          championSelect = true;
+                        });
                         //print(int.parse(nftNumber.text));
                         //testProvider();
                         //testInterface();
@@ -691,7 +679,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   void resetGame() {
     setState(() {
-      championSelect = true;
+      tribeSelected = false;
       winner = false;
       loser = false;
       selectedAttr.clear();
@@ -714,15 +702,15 @@ class _MyHomePageState extends State<MyHomePage>
         child: Padding(
             padding: EdgeInsets.all(20),
             child:
-                // AnimatedTextKit(
-                //   animatedTexts: [
-                //     TyperAnimatedText('Reality has been fractured.'),
-                //     TyperAnimatedText(
-                //         'Tribes must compete to earn \$utility for their survival.'),
-                //     TyperAnimatedText('What tribe do you champion?')
-                //   ],
-                // )
-                Text(
+            // AnimatedTextKit(
+            //   animatedTexts: [
+            //     TyperAnimatedText('Reality has been fractured.'),
+            //     TyperAnimatedText(
+            //         'Tribes must compete to earn \$utility for their survival.'),
+            //     TyperAnimatedText('What tribe do you champion?')
+            //   ],
+            // )
+            Text(
               'Reality has been fractured. Tribes must compete to earn \$utility for their survival. What tribe do you champion?',
             )));
   }
@@ -758,4 +746,37 @@ class _MyHomePageState extends State<MyHomePage>
           }),
     );
   }
+
+  Widget tribeSelect() {
+    return Column(
+        children: [
+          GridView.extent(
+            shrinkWrap: true,
+              maxCrossAxisExtent: 130.0,
+              crossAxisSpacing: 0.0,
+              mainAxisSpacing: 0.0,
+              children: elements
+                  .map((el) =>
+                  Card(
+                      color: Colors.lightBlue[100],
+                      child: InkWell(
+                        onTap: () {
+                          tribeSelected = true;
+                          setState(() {
+
+                          });
+                        },
+                        child: Center(
+                            child: Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Text(el,
+                                textAlign: TextAlign.center))),
+                      )
+                  ))
+                  .toList()),
+          Text('The NFT\'s description')
+        ]
+    );
+  }
+
 }
